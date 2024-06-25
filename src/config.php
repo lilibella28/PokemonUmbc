@@ -22,7 +22,7 @@
         // Create table with the structure create_database.sql
         $sql = file_get_contents('../database/create_database.sql');
         $conn->exec($sql);
-        echo "<p>Table 'pokemon' created successfully</p>";
+        echo "<p>Table created successfully</p>";
 
         // Import CSV data to phpAdmin
         $data_file = '../proj3_images/pokemon_data.csv';
