@@ -10,17 +10,12 @@
 
 <body>
     <?php
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "pokemon";
+    include '../database/pdo.php';
 
     try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+       
 
-        // Fetch and display Name and ID from the database
-        $sql = "SELECT ID, Name FROM pokemon_data";
+        $sql = "SELECT *, Name FROM pokemon_data";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
 
@@ -29,6 +24,15 @@
             echo "<li>";
             echo "ID: " . ($row['ID']) . "<br>";
             echo "Name: " . ($row['Name']) . "<br>";
+            echo "Type1: " . ($row['Type1']) . "<br>";
+            echo "Type2: " . ($row['Type2']) . "<br>";
+            echo "Total: " . ($row['Total']) . "<br>";
+            echo "HP: " . ($row['Attack']) . "<br>";
+            echo "Defense: " . ($row['Defense']) . "<br>";
+            echo "SpAtk: " . ($row['SpAtk']) . "<br>";
+            echo "SDef: " . ($row['SpDef']) . "<br>";
+            echo "Generation: " . ($row['Generation']) . "<br>";
+            echo "Legendary: " . ($row['Legendary']) . "<br>";
             echo "</li>";
         }
     } catch (PDOException $e) {
