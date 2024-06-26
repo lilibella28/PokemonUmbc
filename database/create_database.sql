@@ -15,10 +15,3 @@ CREATE TABLE IF NOT EXISTS pokemon_data (
     Generation INT,
     Legendary BOOLEAN
 );
-
-
-CREATE TABLE IF NOT EXISTS pokemon_image (
-ID INT  PRIMARY KEY AUTO_INCREMENT,
-Image_name VARCHAR(255),
-Image_data LONGBLOB
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
