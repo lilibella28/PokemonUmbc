@@ -1,8 +1,6 @@
--- Create the database and switch to it
 CREATE DATABASE IF NOT EXISTS pokemon;
 USE pokemon;
 
--- Create the pokemon_data table
 CREATE TABLE IF NOT EXISTS pokemon_data (
     PokemonID INT PRIMARY KEY AUTO_INCREMENT,
     Name VARCHAR(50),
