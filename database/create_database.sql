@@ -64,7 +64,6 @@ CREATE TABLE IF NOT EXISTS NPCTeams (
     FOREIGN KEY (PokemonID) REFERENCES pokemon_data(PokemonID)
 );
 
--- Create the Evolution table
 CREATE TABLE IF NOT EXISTS Evolution (
     PokemonID INT NOT NULL,
     EvolutionLevel INT,
