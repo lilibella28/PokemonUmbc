@@ -10,14 +10,9 @@
 
 <body>
     <?php
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "pokemon";
-
+include '../database/pdo.php';
     try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        
 
         // Create table with the structure create_database.sql
         $sql = file_get_contents('../database/create_database.sql');
