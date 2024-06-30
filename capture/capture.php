@@ -9,12 +9,54 @@ try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Fetch Name, ID, and HP from the database
-    $sql = "SELECT ID, Name, HP FROM pokemon_data";
+    $sql = "SELECT ID, Name, Type1, Type2, HP, Speed FROM pokemon_data";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
 
     // Fetch all rows
     $pokemons = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $userId = $_POST['userId'];
+        $pokemonId = $_POST['pokemonId'];
+        $level = $_POST['level'];
+        $hp = $_POST['hp'];
+        $attack = $_POST['attack'];
+        $defense = $_POST['defense'];
+        $specialAttack = $_POST['specialAttack'];
+        $specialDefense = $_POST['specialDefense'];
+        $speed = $_POST['speed'];
+        $experiencePoints = $_POST['experiencePoints'];
+
+        // Find the first empty slot for the user
+        $sql = "SELECT MAX(PokemonSlot) AS max_slot FROM UserTeam WHERE UserID = :userId";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':userId', $userId);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $nextSlot = $result['max_slot'] + 1;
+
+        if ($nextSlot <= 6) {
+            $sql = "INSERT INTO UserTeam (UserID, PokemonSlot, PokemonID, Level, HP, Attack, Defense, SpecialAttack, SpecialDefense, Speed, ExperiencePoints)
+                    VALUES (:userId, :pokemonSlot, :pokemonId, :level, :hp, :attack, :defense, :specialAttack, :specialDefense, :speed, :experiencePoints)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':userId', $userId);
+            $stmt->bindParam(':pokemonSlot', $nextSlot);
+            $stmt->bindParam(':pokemonId', $pokemonId);
+            $stmt->bindParam(':level', $level);
+            $stmt->bindParam(':hp', $hp);
+            $stmt->bindParam(':attack', $attack);
+            $stmt->bindParam(':defense', $defense);
+            $stmt->bindParam(':specialAttack', $specialAttack);
+            $stmt->bindParam(':specialDefense', $specialDefense);
+            $stmt->bindParam(':speed', $speed);
+            $stmt->bindParam(':experiencePoints', $experiencePoints);
+            $stmt->execute();
+            echo "Pokémon added successfully!";
+        } else {
+            echo "User's party is full!";
+        }
+    }
 
 } catch (PDOException $e) {
     echo "<p>Connection failed: " . $e->getMessage() . "</p>";
@@ -37,7 +79,8 @@ try {
             <option value="">-- Select a Pokemon --</option>
             <?php foreach ($pokemons as $pokemon): ?>
                 <!-- the value will be used to help the program determine what pokemon it is -->
-                <option value="<?= $pokemon['ID'] ?>" data-hp="<?= $pokemon['HP'] ?>" monName="<?= $pokemon['Name'] ?>">
+                <option value="<?= $pokemon['ID'] ?>" data-hp="<?= $pokemon['HP'] ?>" monName="<?= $pokemon['Name'] ?>"
+                monSpeed="<?= $pokemon['Speed'] ?>"  monType1="<?= $pokemon['Type1'] ?>" monType2="<?= $pokemon['Type2'] ?>">
                     <?= htmlspecialchars($pokemon['Name']) ?> (HP: <?= $pokemon['HP'] ?>)
                 </option>
             <?php endforeach; ?>
@@ -58,6 +101,8 @@ try {
             <option value="3">ultra ball</option>
             <option value="4">repeat ball</option>
             <option value="5">quick ball</option>
+            <option value="6">net ball</option>
+            <option value="7">fast ball</option>
             </select>
         <button type="submit">Submit</button>
     </form>
@@ -140,8 +185,28 @@ try {
             "id" : 5,
             "name" : "quickball",
             "rateModifier" : 1,
+        },
+        {
+            "id" : 6,
+            "name" : "netball",
+            "rateModifier" : 1,
+        },
+        {"id" : 7,
+            "name" : "fastball",
+            "rateModifier" : 1,
         }
+      
     ]
+
+    // checks if any of the pokemon's types match the passed in type
+    function checkType(type,pokemon){
+        if(pokemon.getAttribute('monType1') === type 
+        || pokemon.getAttribute('monType2') === type){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     function calcCatchRate(currHP,maxHP,ball,wildMonData,turn){
         // calculation based off of data from bulbapedia
@@ -151,7 +216,14 @@ try {
         } else if((ball.name === "repeatball") && isInParty(wildMonData)){
             console.log("repeat confirmed");
             ball.rateModifier = 4;
-        }
+        } else if((ball.name === "netball") && (checkType("Water",wildMonData) 
+        || checkType("Bug",wildMonData))){
+            console.log("net confirmed");
+            ball.rateModifier = 3.5;
+        } else if((ball.name === "fastball") && (parseInt(wildMonData.getAttribute('monSpeed')) >= 100 )){
+            console.log("fast confirmed");
+            ball.rateModifier = 4;
+        } 
         var numerator = (1 + ((maxHP * 3)-(currHP * 2)) * ball.rateModifier);
         var denominator = (maxHP * 3);
         return numerator / denominator;
