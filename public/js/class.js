@@ -1,5 +1,5 @@
 class Sprite {
-  constructor({ position, image, frames = { max: 1 }, sprites = [] }) {
+  constructor({ position, image, frames = { max: 1 }, sprites = [], moves = false }) {
     this.position = position;
     this.image = image;
     this.frames = { ...frames, val: 0, delay: 0 };
@@ -9,7 +9,7 @@ class Sprite {
     this.width = this.image.width / this.frames.max; // Initialize width based on image and frames
     this.height = this.image.height / this.frames.max; // Initialize height based on image and frames
 
-    this.moves = false;
+    this.moves = moves;
     this.flipped = false; // Flag to track if the sprite is flipped
   }
 
@@ -46,6 +46,7 @@ class Sprite {
     }
 
     if (!this.moves) {
+      this.frames.val = 0;
       return;
     }
 

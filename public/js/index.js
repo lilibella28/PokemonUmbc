@@ -237,6 +237,17 @@ function showTeamList() {
 
 // Function to escape battle (dummy function)
 function escapeBattle() {
+  gsap.to('#overlap', {
+    opacity: 1,
+    onComplete: () => {
+      cancelAnimationFrame(battleAnimationId)
+      animate()
+      document.querySelector('#userInterface').style.display = 'none'
+      gsap.to('#overlap', {
+        opacity: 0
+      })
+    }
+  })
   console.log('Escaped from battle');
 }
 
@@ -247,7 +258,7 @@ function rectCollide({rect1, rect2}){
   return(
     rect1.position.x + rect1.width - 30 >= rect2.position.x &&
      rect1.position.x + 30 <= rect2.position.x + rect2.width &&
-     rect1.position.y + 10 <= rect2.position.y + rect2.height &&
+     rect1.position.y + 78 <= rect2.position.y + rect2.height &&
      rect1.position.y + rect1.height - 10 >= rect2.position.y
   )
 }
@@ -268,6 +279,7 @@ const battle = {initiated: false}
 function animate(){
   const animationId = window.requestAnimationFrame(animate)
   background.draw()
+  move = true
   boundaries.forEach(boundary => {
     boundary.draw()
 
@@ -287,6 +299,7 @@ function animate(){
   })
   player.draw()
   foreground.draw();
+
 if(battle.initiated) return
 
   if(keys.w.pressed || keys.ArrowUp.pressed || 
@@ -313,13 +326,13 @@ if(battle.initiated) return
             yoyo: true,
             duration: 0.4,
             onComplete(){
-              gsap.to('overlap', {
+              gsap.to('#overlap', {
                 opacity: 1,
-                duration: 0.4,
+                duration: 0.8,
                 onComplete() {   
               //activate new animation loop
               animateBattle()
-              gsap.to('overlap', {
+              gsap.to('#overlap', {
                 opacity: 0,
                 duration: 0.4
               })
@@ -358,7 +371,7 @@ if(battle.initiated) return
     
 
     if(move)
-    moving.forEach(moving => {moving.position.y += 3})
+    moving.forEach((moving) => {moving.position.y += 3})
   }
   else if((keys.a.pressed && prevKey === 'a') || (keys.ArrowLeft.pressed && prevKey === 'ArrowLeft')){
     player.currentSprite = 1
@@ -381,7 +394,7 @@ if(battle.initiated) return
       }
     }
     if(move)
-    moving.forEach(moving => {moving.position.x += 3})
+    moving.forEach((moving) => {moving.position.x += 3})
   }
   else if((keys.s.pressed && prevKey === 's') || (keys.ArrowDown.pressed && prevKey === 'ArrowDown')){
     player.currentSprite = 0
@@ -404,7 +417,7 @@ if(battle.initiated) return
       }
     }
     if(move) 
-    moving.forEach(moving => {moving.position.y -= 3})
+    moving.forEach((moving) => {moving.position.y -= 3})
   }
   else if((keys.d.pressed && prevKey === 'd') || (keys.ArrowRight.pressed && prevKey === 'ArrowRight')){
     player.currentSprite = 2
@@ -427,11 +440,11 @@ if(battle.initiated) return
       }
     }
     if(move)
-    moving.forEach(moving => {moving.position.x -= 3})
+    moving.forEach((moving) => {moving.position.x -= 3})
   }
 }
 //currently turned off to code battle scenario, uncomment to get the overworld area
-//animate();
+animate();
 
 const battleBackgroundImage = new Image()
 battleBackgroundImage.src = '../images/game_assets/backgrounds/background1.png'
@@ -445,9 +458,11 @@ image: battleBackgroundImage
 //Here is the animate battle function, this is where all the background and sprites are being drawn to, make functions if necessary
 // for more implementation
 let battleAnimationId 
+
 function animateBattle(){
   battleAnimationId = window.requestAnimationFrame(animateBattle)
   battleBackground.draw(canvas.width, canvas.height)
+  document.querySelector('#userInterface').style.display = 'block'
   pokemon1.draw(150, 150)
   pokemon2.flip(true);
   pokemon2.draw(150, 150)
@@ -455,7 +470,7 @@ function animateBattle(){
   console.log('animating battle')
 }
 
-animateBattle();
+//animateBattle();
 
 
 let prevKey = ''
@@ -500,27 +515,35 @@ window.addEventListener('keyup', (e) => {
   switch(e.key){
     case 'w':
       keys.w.pressed = false
+      player.moves = false
       break
     case 'ArrowUp':
       keys.ArrowUp.pressed = false
+      player.moves = false
       break
     case 'a':
       keys.a.pressed = false
+      player.moves = false
       break
     case 'ArrowLeft':
       keys.ArrowLeft.pressed = false
+      player.moves = false
       break
     case 's':
       keys.s.pressed = false
+      player.moves = false
       break
     case 'ArrowDown':
       keys.ArrowDown.pressed = false
+      player.moves = false
       break
     case 'd':
       keys.d.pressed = false
+      player.moves = false
       break
     case 'ArrowRight':
       keys.ArrowRight.pressed = false
+      player.moves = false
       break
   }
 })
