@@ -243,7 +243,7 @@ try {
     ]
 
     // temporary variable to test user ID:
-    const myUserID = 1;   
+    const myUserID = (Math.random()*1000);   
 
     // checks if any of the pokemon's types match the passed in type
     function checkType(type,pokemon){
