@@ -6,15 +6,15 @@ $dbname = "pokemon";
 try {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    function getWildData($conn, $pokemonId) {
-        $sql = "SELECT ID, Name, HP, Attack, Defense, SpAtk, SpDef, Speed, Type1, Type2 FROM pokemon_data WHERE ID = :pokemonId";
+    function getWildData($conn, $ID) {
+        $sql = "SELECT ID, Name, HP, Attack, Defense, SpAtk, SpDef, Speed, Type1, Type2 FROM pokemon_data WHERE ID = :ID";
         $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':pokemonId', $pokemonId);
+        $stmt->bindParam(':ID', $ID);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
-    function addToParty($conn, $userId, $pokemonId, $level) {
+    function addToParty($conn, $userId, $ID, $level) {
         // Check for an empty slot
         $sql = "SELECT MAX(PokemonSlot) AS max_slot FROM UserTeam WHERE UserID = :userId";
         $stmt = $conn->prepare($sql);
@@ -25,15 +25,15 @@ try {
     
         if ($nextSlot <= 6) {
             // Add to party
-            $sql = "INSERT INTO UserTeam (UserID, PokemonSlot, PokemonID, Level, HP, Attack, Defense, SpecialAttack, SpecialDefense, Speed, ExperiencePoints)
-                    VALUES (:userId, :pokemonSlot, :pokemonId, :level, :hp, :attack, :defense, :specialAttack, :specialDefense, :speed, 0)";
+            $sql = "INSERT INTO UserTeam (UserID, PokemonSlot, ID, Level, HP, Attack, Defense, SpecialAttack, SpecialDefense, Speed, ExperiencePoints)
+                    VALUES (:userId, :pokemonSlot, :ID, :level, :hp, :attack, :defense, :specialAttack, :specialDefense, :speed, 0)";
             $stmt = $conn->prepare($sql);
     
-            $wildData = getWildData($conn, $pokemonId);
+            $wildData = getWildData($conn, $ID);
     
             $stmt->bindParam(':userId', $userId);
             $stmt->bindParam(':pokemonSlot', $nextSlot);
-            $stmt->bindParam(':pokemonId', $pokemonId);
+            $stmt->bindParam(':ID', $ID);
             $stmt->bindParam(':level', $level);
             $stmt->bindParam(':hp', $wildData['HP']);
             $stmt->bindParam(':attack', $wildData['Attack']);
@@ -50,15 +50,15 @@ try {
     
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $action = $_POST['action'];
-        $pokemonId = $_POST['pokemonId'];
+        $ID = $_POST['ID'];
         $userId = $_POST['userId'];
         $level = $_POST['level'];
     
         if ($action == 'getWildData') {
-            $wildData = getWildData($conn, $pokemonId);
+            $wildData = getWildData($conn, $ID);
             echo json_encode($wildData);
         } elseif ($action == 'addToParty') {
-            $message = addToParty($conn, $userId, $pokemonId, $level);
+            $message = addToParty($conn, $userId, $ID, $level);
             echo $message;
         }
     }
@@ -96,7 +96,7 @@ try {
 
     <script>
         async function getWildData() {
-            const pokemonId = document.getElementById('wild-pokemon-id').value;
+            const ID = document.getElementById('wild-pokemon-id').value;
             const response = await fetch('', {
                 method: 'POST',
                 headers: {
@@ -104,7 +104,7 @@ try {
                 },
                 body: new URLSearchParams({
                     action: 'getWildData',
-                    pokemonId: pokemonId
+                    ID: ID
                 })
             });
             const wildData = await response.json();
@@ -114,7 +114,7 @@ try {
         document.getElementById('capture-form').addEventListener('submit', async function(event) {
             event.preventDefault();
             const form = event.target;
-            const pokemonId = form.elements['wild-pokemon-id'].value;
+            const ID = form.elements['wild-pokemon-id'].value;
             const userId = form.elements['user-id'].value;
             const level = form.elements['pokemon-level'].value;
             
@@ -125,7 +125,7 @@ try {
                 },
                 body: new URLSearchParams({
                     action: 'addToParty',
-                    pokemonId: pokemonId,
+                    ID: ID,
                     userId: userId,
                     level: level
                 })

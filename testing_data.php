@@ -46,7 +46,7 @@
             echo "<li>";
             echo "UserID: " . htmlspecialchars($row['UserID']) . "<br>";
             echo "PokemonSlot: " . htmlspecialchars($row['PokemonSlot']) . "<br>";
-            echo "PokemonID: " . htmlspecialchars($row['PokemonID']) . "<br>";
+            echo "ID: " . htmlspecialchars($row['ID']) . "<br>";
             echo "Level: " . htmlspecialchars($row['Level']) . "<br>";
             echo "HP: " . htmlspecialchars($row['HP']) . "<br>";
             echo "Attack: " . htmlspecialchars($row['Attack']) . "<br>";
@@ -72,7 +72,7 @@
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             echo "<li>";
             echo "EncounterID: " . htmlspecialchars($row['EncounterID']) . "<br>";
-            echo "PokemonID: " . htmlspecialchars($row['PokemonID']) . "<br>";
+            echo "ID: " . htmlspecialchars($row['ID']) . "<br>";
             echo "Location: " . htmlspecialchars($row['Location']) . "<br>";
             echo "MinLevel: " . htmlspecialchars($row['MinLevel']) . "<br>";
             echo "MaxLevel: " . htmlspecialchars($row['MaxLevel']) . "<br>";
@@ -91,7 +91,7 @@
             echo "<li>";
             echo "NPCID: " . htmlspecialchars($row['NPCID']) . "<br>";
             echo "PokemonSlot: " . htmlspecialchars($row['PokemonSlot']) . "<br>";
-            echo "PokemonID: " . htmlspecialchars($row['PokemonID']) . "<br>";
+            echo "ID: " . htmlspecialchars($row['ID']) . "<br>";
             echo "Level: " . htmlspecialchars($row['Level']) . "<br>";
             echo "HP: " . htmlspecialchars($row['HP']) . "<br>";
             echo "Attack: " . htmlspecialchars($row['Attack']) . "<br>";
@@ -115,7 +115,7 @@
         echo "<ul>";
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             echo "<li>";
-            echo "PokemonID: " . htmlspecialchars($row['PokemonID']) . "<br>";
+            echo "ID: " . htmlspecialchars($row['ID']) . "<br>";
             echo "EvolutionLevel: " . htmlspecialchars($row['EvolutionLevel']) . "<br>";
             echo "EvolutionMethod: " . htmlspecialchars($row['EvolutionMethod']) . "<br>";
             echo "EvolvedFormID: " . htmlspecialchars($row['EvolvedFormID']) . "<br>";
