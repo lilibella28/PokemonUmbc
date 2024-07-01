@@ -25,25 +25,36 @@ try {
     $stmt = $conn->query("SELECT * FROM UserTeam");
     $partyMembers = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
-    function updateLevel($conn, $userId,$ID,$level){
-        $sql = "UPDATE UserTeam SET Level=($level++) WHERE UserID = :userId AND ID = :ID AND Level = :level";
+    // Update Level Function
+    function updateLevel($conn, $userId, $ID) {
+        $sql = "UPDATE UserTeam SET Level = Level + 1 WHERE UserID = :userId AND ID = :ID";
         $stmt = $conn->prepare($sql);
-        $stmt->bindValue(":UserID", $userId);
+        $stmt->bindValue(":userId", $userId);
         $stmt->bindValue(":ID", $ID);
-        $stmt->bindValue(":Level", $level);
         $stmt->execute();
-        return "level up!";
+        return "Level up!";
     }
 
-    function updateStat($conn, $userId,$ID,$stat,$level){
-        $sql = "UPDATE UserTeam SET {$stat['stat']} = :value WHERE UserID = :userId AND ID = :ID AND Level = :level";
+    // Update Stat Function
+    function updateStat($conn, $userId, $ID, $stat) {
+        $sql = "UPDATE UserTeam SET {$stat['stat']} = :value WHERE UserID = :userId AND ID = :ID";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':value', $stat['num']);
-        $stmt->bindValue(":UserID", $userId);
+        $stmt->bindValue(":userId", $userId);
         $stmt->bindValue(":ID", $ID);
-        $stmt->bindValue(":Level", $level);
         $stmt->execute();
-        return "level up!";
+        return "{$stat['stat']} updated!";
+    }
+
+    // Update Experience Function
+    function updateExp($conn, $userId, $exp, $ID) {
+        $sql = "UPDATE UserTeam SET ExperiencePoints = ExperiencePoints + :exp WHERE UserID = :userId AND ID = :ID";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(":exp", $exp);
+        $stmt->bindValue(":userId", $userId);
+        $stmt->bindValue(":ID", $ID);
+        $stmt->execute();
+        return "Experience points successfully gained";
     }
 
     function getMonName($conn, $ID) {
@@ -61,24 +72,23 @@ try {
     $stmt->execute();
 
     // gets pokemon data from javascript
+    // Handle POST requests
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $action = $_POST['action'];
         $ID = $_POST['ID'];
         $userId = $_POST['userId'];
-        $level = $_POST['pokemonLevel'];
-        $stat = $_POST['monStats[i].num'];
+        $Level = $_POST['Level'];
+        $stat = $_POST['stat'];
+        $exp = $_POST['exp'];
 
-        if($action == 'updateLevel'){
-            $message = updateLevel($conn, $userId,$ID,$level);
+        if ($action == 'updateLevel') {
+            $message = updateLevel($conn, $userId, $ID);
             echo $message;
-        }else if($action == 'updateStat'){
-            $message = updateStat($conn, $userId,$ID,$stat,$level);
+        } elseif ($action == 'transferStat') {
+            $message = updateStat($conn, $userId, $ID, $stat);
             echo $message;
-        }else if ($action == 'getWildData') {
-            $wildData = getWildData($conn, $ID);
-            echo json_encode($wildData);
-        } elseif ($action == 'addToParty') {
-            $message = addToParty($conn, $userId, $ID, $level);
+        } elseif ($action == 'updateExp') {
+            $message = updateExp($conn, $userId, $exp, $ID);
             echo $message;
         }
         exit;
@@ -146,13 +156,14 @@ try {
         // displays user's party
         $stmt = $conn->query("SELECT * FROM UserTeam");
         echo "<table border='1'>";
-        echo "<tr><th> userID </th><th>Name</th><th>Level</th><th>ID</th></tr>";
+        echo "<tr><th> userID </th><th>Name</th><th>Level</th><th>ID</th><th>EXP</th></tr>";
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             echo "<tr>";
             echo "<td>" . $row['UserID'] . "</td>";
             echo "<td>" . getMonName($conn,$row['ID']) . "</td>";
             echo "<td>" . $row['Level'] . "</td>";
             echo "<td>" . $row['ID'] . "</td>";
+            echo "<td>" . $row['ExperiencePoints'] . "</td>";
             echo "</tr>";
         }
         echo "</table>";
@@ -221,7 +232,7 @@ try {
                         var modifiers = new Array(1.5,1.2) // Example modifiers (e.g., Lucky Egg = 1.5, traded Pokémon = 1.2)
                         var exp = calculateEXP(pokemonLevel,defeatedPokemonBaseExp,parseInt(enemyLevel.value),modifiers);
                         pokemonExp += exp;
-                        updateExp(pokemonExp);
+                        updateExp(monSelectedOption,pokemonExp);
                         document.getElementById('results').innerText = `${pokemonName} has gained ${exp} exp`;
                         checkLevelUp(monSelectedOption,pokemonLevel,pokemonExp,monStats,baseMonStats);
                     }else{
@@ -247,7 +258,7 @@ try {
     ]
 
     for (i = 2; i < 98; i++){
-        var expObj = {"level" : i+2,"expReq" : ((i+2)*100)};
+        var expObj = {"level" : i+1,"expReq" : ((i+1)*100)};
         expTable.push(expObj);
     }
     let exp99 = {"level" : 99,"expReq" : 950000};
@@ -255,8 +266,28 @@ try {
     let exp100 = {"level" : 100,"expReq" : 1000000};
     expTable.push(exp100);
 
-    async function updateExp(pokemonExp){
-
+    async function updateExp(monSelectedOption,pokemonExp){
+        console.log("adding exp");
+        monID = monSelectedOption.value;
+        Level = monSelectedOption.getAttribute("monLevel");
+        userId = monSelectedOption.getAttribute('userID');
+        exp = pokemonExp;
+        const response = await fetch('', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    action: 'updateExp',
+                    ID: monID,
+                    userId: userId,
+                    exp: exp,
+                    stat: 0,
+                    Level: Level
+                })
+        });
+        const result = await response.text();
+        document.getElementById('response').innerText = result;
     }
 
     function calculateEXP(monLevel,deadMonBaseEXP,deadMonLevel,arr_modifiers){
@@ -271,6 +302,7 @@ try {
 
     async function updateLevel(monSelectedOption,pokemonLevel){
         console.log("updating level");
+        Level = pokemonLevel
         const response = await fetch('', {
                 method: 'POST',
                 headers: {
@@ -280,7 +312,9 @@ try {
                     action: 'updateLevel',
                     ID: monSelectedOption.value,
                     userId: monSelectedOption.getAttribute('userID'),
-                    level: pokemonLevel
+                    Level: Level,
+                    stat: 0,
+                    exp: 0
                 })
         });
         const result = await response.text();
@@ -300,7 +334,9 @@ try {
         console.log("level after check: ", pokemonLevel);
     }
 
-    async function transferStat(stat){
+    async function transferStat(Stat,currLevel,pokemon){
+        userId = pokemon.getAttribute('userID');
+        Level =currLevel;
         // calls php function updateStat
         const response = await fetch('', {
             method: 'POST',
@@ -308,11 +344,12 @@ try {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             body: new URLSearchParams({
-                action: 'updateHP',
-                ID: monSelectedOption.value,
-                userId: monSelectedOption.getAttribute('userID'),
-                level: pokemonLevel,
-                Stat: stat
+                action: 'transferStat',
+                ID: pokemon.value,
+                userId: userId,
+                Level: Level,
+                stat: Stat,
+                exp: 0,
             })
         });
     }
@@ -324,10 +361,10 @@ try {
             console.log(monStats[i].stat," before level up: ", monStats[i].num);
             if(monStats[i].stat === "HP"){
                 monStats[i].num = calcStat(baseMonStats[i].num,true,currLevel);
-                transferStat(monStats[i]);
+                transferStat(monStats[i],currLevel,monSelectedOption);
             }else{
                 monStats[i].num = calcStat(baseMonStats[i].num,false,currLevel);
-                transferStat(monStats[i]);
+                transferStat(monStats[i],currLevel,monSelectedOption);
             }
             console.log(monStats[i].stat," after level up: ", monStats[i].num);
         }
