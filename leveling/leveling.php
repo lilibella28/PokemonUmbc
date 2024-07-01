@@ -324,9 +324,10 @@ try {
     function checkLevelUp(monSelectedOption,pokemonLevel,expGained,monStats,baseMonStats){
         console.log("level before check: ", pokemonLevel);
         console.log("currEXP ammount: ", expGained);
-        while(pokemonLevel <= 100 && expGained >= expTable[pokemonLevel+1].expReq){
+        if(pokemonLevel <= 100 && expGained >= expTable[pokemonLevel+1].expReq){
             console.log("boosting level");
-            updateLevel(monSelectedOption,pokemonLevel);
+            updateLevel(monSelectedOption,pokemonLevel + 1);
+            pokemonLevel++
             document.getElementById("levelAlert").innerText = `congratualtions, 
             your ${monSelectedOption.getAttribute('monName')} grew to level ${pokemonLevel}`
             updateStats(monSelectedOption,monStats,baseMonStats);
