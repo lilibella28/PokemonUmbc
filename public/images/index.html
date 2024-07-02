@@ -79,63 +79,76 @@
     <div style="display: inline-block; position: relative;">
         <div id="overlap" style="background-color: black; position: absolute; top: 0; right: 0; 
         bottom: 0; left: 0; opacity: 0; pointer-events: none; z-index: 10;"></div>
-        
-        <div style="background-color: white; width: 300px; height: 100px; position: absolute; 
-        top: 10px; right: 50px; border: 5px black solid; padding: 5px;">
-        <h1 id="pokemon-name-1">placeholder 1</h1>
-        <div style="position: relative;">
-            <div style="height: 5px; background-color: #ccc; margin-top: 10px;"></div>
-            <div style="height: 5px; background-color: green; position: absolute; top: 0; left: 0; right: 0;"></div>
-        </div>
-    </div>
 
-    <div style="background-color: white; width: 300px; height: 100px; position: absolute; 
-    bottom: 250px; left: 30px; border: 5px black solid; padding: 5px;">
-    <h1 id="pokemon-name-2">placeholder 2</h1>
-    <div style="position: relative;">
-        <div style="height: 5px; background-color: #ccc; margin-top: 10px;"></div>
-        <div style="height: 5px; background-color: green; position: absolute; top: 0; left: 0; right: 0;"></div>
-    </div>
-    </div>
-    
         <canvas></canvas>
-        <div style="background-color: white; height: 200px; position: absolute; bottom: 0; left: 0; right: 0; border-top: 5px black solid;">
-            <div id="battle-interface">
-                <!-- Dynamically add buttons for attack options, bag items, and team -->
-                <button class="battle-button" onclick="showAttackOptions()">Attack</button>
-                <button class="battle-button" onclick="showBagItems()">Bag</button>
-                <button class="battle-button" onclick="showTeamList()">Team</button>
-                <button class="battle-button" onclick="escapeBattle()">Escape</button>
-            </div>
-            <div class="left-panel" id="attack-options">
-                <!-- Content for attack options will be dynamically added here -->
-                <h3>Attack Options</h3>
-                <div id="attack-list" class="button-container">
-                    <!-- Attack options will be dynamically added here -->
+
+        <div id="npc" style="position: absolute; top: 10px; left: 10px; width: 160px; height: 240px; background: url('../images/NPC.png') no-repeat; background-size: contain; cursor: pointer;"></div>
+        <div id="dialog-box" style="display: none; position: absolute; top: 100px; left: 150px; width: 300px; padding: 10px; background-color: white; border: 2px solid black; z-index: 20;">
+            <p id="dialog-text">Welcome to the world of Pokémon! Here are some hints and instructions...</p>
+            <button onclick="nextDialog()">Next</button>
+            <button onclick="closeDialog()">Close</button>
+        </div>
+
+        <div id="userInterface" style="display: none;">
+            <div style="background-color: white; width: 300px; height: 100px; position: absolute; 
+                        top: 10px; right: 50px; border: 5px black solid; padding: 5px;">
+                <h1 id="pokemon-name-1">placeholder 1</h1>
+                <div style="position: relative;">
+                    <div style="height: 5px; background-color: #ccc; margin-top: 10px;"></div>
+                    <div style="height: 5px; background-color: green; position: absolute; top: 0; left: 0; right: 0;"></div>
                 </div>
             </div>
-            <div class="left-panel" id="bag-items">
-                <!-- Content for bag items will be dynamically added here -->
-                <h3>Bag Items</h3>
-                <div id="item-list" class="button-container">
-                    <!-- Bag items will be dynamically added here -->
+
+            <div style="background-color: white; width: 300px; height: 100px; position: absolute; 
+                        bottom: 250px; left: 30px; border: 5px black solid; padding: 5px;">
+                <h1 id="pokemon-name-2">placeholder 2</h1>
+                <div style="position: relative;">
+                    <div style="height: 5px; background-color: #ccc; margin-top: 10px;"></div>
+                    <div style="height: 5px; background-color: green; position: absolute; top: 0; left: 0; right: 0;"></div>
                 </div>
             </div>
-            <div class="left-panel" id="team-pokemon">
-                <!-- Content for team Pokémon will be dynamically added here -->
-                <h3>Team Pokémon</h3>
-                <div id="pokemon-list" class="button-container">
-                    <!-- Team Pokémon will be dynamically added here -->
+
+            <div style="background-color: white; height: 200px; position: absolute; bottom: 0; left: 0; right: 0; border-top: 5px black solid;">
+                <div id="battle-interface">
+                    <!-- Dynamically add buttons for attack options, bag items, and team -->
+                    <button class="battle-button" onclick="showAttackOptions()">Attack</button>
+                    <button class="battle-button" onclick="showBagItems()">Bag</button>
+                    <button class="battle-button" onclick="showTeamList()">Team</button>
+                    <button class="battle-button" onclick="escapeBattle()">Escape</button>
+                </div>
+                <div class="left-panel" id="attack-options">
+                    <!-- Content for attack options will be dynamically added here -->
+                    <h3>Attack Options</h3>
+                    <div id="attack-list" class="button-container">
+                        <!-- Attack options will be dynamically added here -->
+                    </div>
+                </div>
+                <div class="left-panel" id="bag-items">
+                    <!-- Content for bag items will be dynamically added here -->
+                    <h3>Bag Items</h3>
+                    <div id="item-list" class="button-container">
+                        <!-- Bag items will be dynamically added here -->
+                    </div>
+                </div>
+                <div class="left-panel" id="team-pokemon">
+                    <!-- Content for team Pokémon will be dynamically added here -->
+                    <h3>Team Pokémon</h3>
+                    <div id="pokemon-list" class="button-container">
+                        <!-- Team Pokémon will be dynamically added here -->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- JavaScript and external libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js" integrity="sha512-6+YN/9o9BWrk6wSfGxQGpt3EUK6XeHi6yeHV+TYD2GR0Sj/cggRpXr1BrAQf0as6XslxomMUxXp2vIl+fv0QRA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js" integrity="sha512-H6cPm97FAsgIKmlBA4s774vqoN24V5gSQL4yBTDOY2su2DeXZVhQPxFK4P6GPdnZqM9fg1G3cMv5wD7e6cFLZQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../js/audio.js"></script>
     <script src="../js/collision.js"></script>
     <script src="../js/grassEncounter.js"></script>
     <script src="../js/class.js"></script>
     <script src="../js/index.js"></script>
 </body>
 </html>
+
 

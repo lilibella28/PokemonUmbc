@@ -237,6 +237,19 @@ function showTeamList() {
 
 // Function to escape battle (dummy function)
 function escapeBattle() {
+  gsap.to('#overlap', {
+    opacity: 1,
+    onComplete: () => {
+      cancelAnimationFrame(battleAnimationId)
+      audio.Battle.stop()
+      audio.Map.play()
+      animate()
+      document.querySelector('#userInterface').style.display = 'none'
+      gsap.to('#overlap', {
+        opacity: 0
+      })
+    }
+  })
   console.log('Escaped from battle');
 }
 
@@ -247,7 +260,7 @@ function rectCollide({rect1, rect2}){
   return(
     rect1.position.x + rect1.width - 30 >= rect2.position.x &&
      rect1.position.x + 30 <= rect2.position.x + rect2.width &&
-     rect1.position.y + 10 <= rect2.position.y + rect2.height &&
+     rect1.position.y + 78 <= rect2.position.y + rect2.height &&
      rect1.position.y + rect1.height - 10 >= rect2.position.y
   )
 }
@@ -261,6 +274,7 @@ function rectOverlap({rect1, rect2}){
     )
 }
 
+let clicked = false
 let move = true
 player.moves = false
 const battle = {initiated: false}
@@ -268,6 +282,7 @@ const battle = {initiated: false}
 function animate(){
   const animationId = window.requestAnimationFrame(animate)
   background.draw()
+  move = true
   boundaries.forEach(boundary => {
     boundary.draw()
 
@@ -287,6 +302,7 @@ function animate(){
   })
   player.draw()
   foreground.draw();
+
 if(battle.initiated) return
 
   if(keys.w.pressed || keys.ArrowUp.pressed || 
@@ -306,6 +322,8 @@ if(battle.initiated) return
           console.log('activate battle')
           //deactivate current animation loop
           window.cancelAnimationFrame(animationId)
+          audio.Map.stop()
+          audio.Battle.play()
           battleZone.initiated = true
           gsap.to('#overlap', {
             opacity: 1,
@@ -313,13 +331,13 @@ if(battle.initiated) return
             yoyo: true,
             duration: 0.4,
             onComplete(){
-              gsap.to('overlap', {
+              gsap.to('#overlap', {
                 opacity: 1,
-                duration: 0.4,
+                duration: 0.8,
                 onComplete() {   
               //activate new animation loop
               animateBattle()
-              gsap.to('overlap', {
+              gsap.to('#overlap', {
                 opacity: 0,
                 duration: 0.4
               })
@@ -358,7 +376,7 @@ if(battle.initiated) return
     
 
     if(move)
-    moving.forEach(moving => {moving.position.y += 3})
+    moving.forEach((moving) => {moving.position.y += 3})
   }
   else if((keys.a.pressed && prevKey === 'a') || (keys.ArrowLeft.pressed && prevKey === 'ArrowLeft')){
     player.currentSprite = 1
@@ -381,7 +399,7 @@ if(battle.initiated) return
       }
     }
     if(move)
-    moving.forEach(moving => {moving.position.x += 3})
+    moving.forEach((moving) => {moving.position.x += 3})
   }
   else if((keys.s.pressed && prevKey === 's') || (keys.ArrowDown.pressed && prevKey === 'ArrowDown')){
     player.currentSprite = 0
@@ -404,7 +422,7 @@ if(battle.initiated) return
       }
     }
     if(move) 
-    moving.forEach(moving => {moving.position.y -= 3})
+    moving.forEach((moving) => {moving.position.y -= 3})
   }
   else if((keys.d.pressed && prevKey === 'd') || (keys.ArrowRight.pressed && prevKey === 'ArrowRight')){
     player.currentSprite = 2
@@ -427,11 +445,11 @@ if(battle.initiated) return
       }
     }
     if(move)
-    moving.forEach(moving => {moving.position.x -= 3})
+    moving.forEach((moving) => {moving.position.x -= 3})
   }
 }
 //currently turned off to code battle scenario, uncomment to get the overworld area
-//animate();
+animate();
 
 const battleBackgroundImage = new Image()
 battleBackgroundImage.src = '../images/game_assets/backgrounds/background1.png'
@@ -445,9 +463,11 @@ image: battleBackgroundImage
 //Here is the animate battle function, this is where all the background and sprites are being drawn to, make functions if necessary
 // for more implementation
 let battleAnimationId 
+
 function animateBattle(){
   battleAnimationId = window.requestAnimationFrame(animateBattle)
   battleBackground.draw(canvas.width, canvas.height)
+  document.querySelector('#userInterface').style.display = 'block'
   pokemon1.draw(150, 150)
   pokemon2.flip(true);
   pokemon2.draw(150, 150)
@@ -455,7 +475,7 @@ function animateBattle(){
   console.log('animating battle')
 }
 
-animateBattle();
+//animateBattle();
 
 
 let prevKey = ''
@@ -500,27 +520,86 @@ window.addEventListener('keyup', (e) => {
   switch(e.key){
     case 'w':
       keys.w.pressed = false
+      player.moves = false
       break
     case 'ArrowUp':
       keys.ArrowUp.pressed = false
+      player.moves = false
       break
     case 'a':
       keys.a.pressed = false
+      player.moves = false
       break
     case 'ArrowLeft':
       keys.ArrowLeft.pressed = false
+      player.moves = false
       break
     case 's':
       keys.s.pressed = false
+      player.moves = false
       break
     case 'ArrowDown':
       keys.ArrowDown.pressed = false
+      player.moves = false
       break
     case 'd':
       keys.d.pressed = false
+      player.moves = false
       break
     case 'ArrowRight':
       keys.ArrowRight.pressed = false
+      player.moves = false
       break
   }
 })
+
+document.getElementById('npc').addEventListener('click', function () {
+  document.getElementById('dialog-box').style.display = 'block';
+});
+
+let dialogIndex = 0;
+const dialogText = [
+  "Welcome, traveler, to the Mystical Forest of Eldoria! This ancient woodland is teeming with hidden wonders and powerful Pokémon waiting to be discovered.",
+  "The forest's dense trees and hidden cabins are home to many secrets and mysterious creatures.",
+  "Legend has it that deep within the forest lies the Sacred Grove, where the mythical Pokémon, Lumina, is said to reside.",
+  "Lumina holds the power to control the elements and bring balance to our world. However, a dark force has emerged from the depths of the ocean, threatening to disrupt this harmony.",
+  "To protect Eldoria, you must journey through the forest, challenging the Pokémon guardians that dwell within.",
+  "But beware, for the final battle awaits you on the shores of the Enchanted Ocean.",
+  "There, you will face the malevolent Sea Serpent, Tempestus, whose fury can summon raging storms and monstrous waves.",
+  "Gather your courage, train your Pokémon, and uncover the secrets of Eldoria.",
+  "Only then can you restore peace to our land and earn the right to meet Lumina.",
+  "Your adventure begins now!"
+];
+
+function nextDialog() {
+  dialogIndex++;
+  if (dialogIndex < dialogText.length) {
+      document.getElementById('dialog-text').innerText = dialogText[dialogIndex];
+  } else {
+      closeDialog();
+  }
+}
+
+function closeDialog() {
+  document.getElementById('dialog-box').style.display = 'none';
+  dialogIndex = 0;
+}
+
+gsap.to('#npc', {
+  opacity: 0.5,
+  yoyo: true,
+  repeat: -1,
+  duration: 0.5
+});
+
+window.addEventListener('load', function() {
+  document.getElementById('dialog-box').style.display = 'block';
+  document.getElementById('dialog-text').innerText = dialogText[dialogIndex];
+});
+
+window.addEventListener('keydown', function(e) {
+  if (e.key.toLowerCase() === 'h') {
+      document.getElementById('dialog-box').style.display = 'block';
+      document.getElementById('dialog-text').innerText = dialogText[dialogIndex];
+  }
+});
