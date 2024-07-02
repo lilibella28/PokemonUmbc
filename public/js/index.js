@@ -221,8 +221,8 @@ function showAttackOptions() {
 
 
 const userId = 1;
-const wildPokemonID = 18; // Example wild Pokémon ID, dynamically set this based on encounter
-const level = 12; // Example level, dynamically set this as needed
+const wildPokemonID = Math.floor(Math.random() * 500) + 1; // Example wild Pokémon ID, dynamically set this based on encounter
+const level = Math.floor(Math.random() * 100) + 1; // Example level, dynamically set this as needed
 
         // document.getElementById('attack-btn').addEventListener('click', attack);
         // document.getElementById('capture-btn').addEventListener('click', capture);
@@ -278,7 +278,6 @@ const level = 12; // Example level, dynamically set this as needed
             .then(response => response.text())
             .then(message => {
                 alert(message);
-               
             });}
 
 // Function to show bag items
