@@ -82,6 +82,13 @@
 
         <canvas></canvas>
 
+        <div id="npc" style="position: absolute; top: 10px; left: 10px; width: 160px; height: 240px; background: url('../images/NPC.png') no-repeat; background-size: contain; cursor: pointer;"></div>
+        <div id="dialog-box" style="display: none; position: absolute; top: 100px; left: 150px; width: 300px; padding: 10px; background-color: white; border: 2px solid black; z-index: 20;">
+            <p id="dialog-text">Welcome to the world of Pokémon! Here are some hints and instructions...</p>
+            <button onclick="nextDialog()">Next</button>
+            <button onclick="closeDialog()">Close</button>
+        </div>
+
         <div id="userInterface" style="display: none;">
             <div style="background-color: white; width: 300px; height: 100px; position: absolute; 
                         top: 10px; right: 50px; border: 5px black solid; padding: 5px;">

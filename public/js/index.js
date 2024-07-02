@@ -440,7 +440,7 @@ if(battle.initiated) return
       }
     }
     if(move)
-    moving.forEach((moving) => {moving.position.x -= 3})
+    moving.forEach((moving) => {moving.position.x -= 100})
   }
 }
 //currently turned off to code battle scenario, uncomment to get the overworld area
@@ -547,3 +547,55 @@ window.addEventListener('keyup', (e) => {
       break
   }
 })
+
+document.getElementById('npc').addEventListener('click', function () {
+  document.getElementById('dialog-box').style.display = 'block';
+});
+
+let dialogIndex = 0;
+const dialogText = [
+  "Welcome, traveler, to the Mystical Forest of Eldoria! This ancient woodland is teeming with hidden wonders and powerful Pokémon waiting to be discovered.",
+  "The forest's dense trees and hidden cabins are home to many secrets and mysterious creatures.",
+  "Legend has it that deep within the forest lies the Sacred Grove, where the mythical Pokémon, Lumina, is said to reside.",
+  "Lumina holds the power to control the elements and bring balance to our world. However, a dark force has emerged from the depths of the ocean, threatening to disrupt this harmony.",
+  "To protect Eldoria, you must journey through the forest, challenging the Pokémon guardians that dwell within.",
+  "But beware, for the final battle awaits you on the shores of the Enchanted Ocean.",
+  "There, you will face the malevolent Sea Serpent, Tempestus, whose fury can summon raging storms and monstrous waves.",
+  "Gather your courage, train your Pokémon, and uncover the secrets of Eldoria.",
+  "Only then can you restore peace to our land and earn the right to meet Lumina.",
+  "Your adventure begins now!"
+];
+
+function nextDialog() {
+  dialogIndex++;
+  if (dialogIndex < dialogText.length) {
+      document.getElementById('dialog-text').innerText = dialogText[dialogIndex];
+  } else {
+      closeDialog();
+  }
+}
+
+function closeDialog() {
+  document.getElementById('dialog-box').style.display = 'none';
+  dialogIndex = 0;
+}
+
+gsap.to('#npc', {
+  opacity: 0.5,
+  yoyo: true,
+  repeat: -1,
+  duration: 0.5
+});
+
+window.addEventListener('load', function() {
+  document.getElementById('dialog-box').style.display = 'block';
+  document.getElementById('dialog-text').innerText = dialogText[dialogIndex];
+});
+
+window.addEventListener('keydown', function(e) {
+  if (e.key.toLowerCase() === 'h') {
+      document.getElementById('dialog-box').style.display = 'block';
+      document.getElementById('dialog-text').innerText = dialogText[dialogIndex];
+  }
+});
+
