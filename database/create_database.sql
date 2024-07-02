@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS pokemon_data (
 CREATE TABLE IF NOT EXISTS UserTeam (
     UserID INT NOT NULL,
     PokemonSlot INT NOT NULL CHECK (PokemonSlot BETWEEN 1 AND 6),
-    ID INT NOT NULL,
+    ID INT,
     Level INT NOT NULL,
     HP INT NOT NULL,
     Attack INT NOT NULL,
