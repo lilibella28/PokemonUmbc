@@ -440,7 +440,7 @@ if(battle.initiated) return
       }
     }
     if(move)
-    moving.forEach((moving) => {moving.position.x -= 100})
+    moving.forEach((moving) => {moving.position.x -= 3})
   }
 }
 //currently turned off to code battle scenario, uncomment to get the overworld area
