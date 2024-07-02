@@ -1,7 +1,6 @@
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 console.log(gsap);
-
 canvas.width = 1430
 canvas.height = 860
 
@@ -212,11 +211,75 @@ function showAttackOptions() {
     button.textContent = `${attack.name} - Power: ${attack.power}`;
     button.onclick = () => {
       // Implement the attack action here
+      capture()
+      
       console.log(`Used ${attack.name}`);
     };
     attackList.appendChild(button);
   });
 }
+
+
+const userId = 1;
+const wildPokemonID = 18; // Example wild Pokémon ID, dynamically set this based on encounter
+const level = 12; // Example level, dynamically set this as needed
+
+        // document.getElementById('attack-btn').addEventListener('click', attack);
+        // document.getElementById('capture-btn').addEventListener('click', capture);
+
+        // Fetch wild Pokémon data from the server
+        // fetchWildPokemonData(wildPokemonID);
+
+        function fetchWildPokemonData(ID) {
+            fetch('http://localhost/PokemonUmbc/capture/capture.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    action: 'getWildData',
+                    ID: ID
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayWildPokemon(data);
+            });
+        }
+
+        function displayWildPokemon(data) {
+            const wildPokemonDiv = document.getElementById('battle-interfaces');
+            wildPokemonDiv.innerHTML = `
+                <p>Name: ${data.Name}</p>
+                <p>HP: ${data.HP}</p>
+                <p>Attack: ${data.Attack}</p>
+                <p>Defense: ${data.Defense}</p>
+                <p>Speed: ${data.Speed}</p>
+                <p>Type1: ${data.Type1}</p>
+                <p>Type2: ${data.Type2}</p>
+            `;
+        }
+
+        
+
+        function capture() {
+            fetch('http://localhost/PokemonUmbc/capture/capture.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    action: 'addToParty',
+                    ID: wildPokemonID,
+                    userId: userId,
+                    level: level
+                })
+            })
+            .then(response => response.text())
+            .then(message => {
+                alert(message);
+               
+            });}
 
 // Function to show bag items
 function showBagItems() {
