@@ -221,8 +221,8 @@ function showAttackOptions() {
 
 
 const userId = 1;
-const wildPokemonID = Math.floor(Math.random() * 500) + 1; // Example wild Pokémon ID, dynamically set this based on encounter
-const level = Math.floor(Math.random() * 100) + 1; // Example level, dynamically set this as needed
+let wildPokemonID = Math.floor(Math.random() * 500) + 1; // Example wild Pokémon ID, dynamically set this based on encounter
+let level = Math.floor(Math.random() * 100) + 1; // Example level, dynamically set this as needed
 
         // document.getElementById('attack-btn').addEventListener('click', attack);
         // document.getElementById('capture-btn').addEventListener('click', capture);
@@ -277,6 +277,8 @@ const level = Math.floor(Math.random() * 100) + 1; // Example level, dynamically
             })
             .then(response => response.text())
             .then(message => {
+             wildPokemonID = Math.floor(Math.random() * 500) + 1; //adding random pokemon 
+             level = Math.floor(Math.random() * 100) + 1; //adding pokemon
                 alert(message);
             });}
 
