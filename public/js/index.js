@@ -132,6 +132,35 @@ const pokemon2 = new Sprite({
 // Dummy data for testing, need to change this with database calls and other stuff
 //Also note that you need to add functions to add functionalitites to the buttons
 //These are all presets that need to be replaced 
+
+function fetchPokemonData() {
+  fetch('http://localhost/PokemonUmbc/public/images/pokemon_assest.php')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json(); 
+      })
+      .then(data => {
+        // Only for testing purpose delete it. 
+        random_pokemon = Math.floor(Math.random() * data.length) + 1;
+        let pokemonId = data[random_pokemon]?.ID
+        let pokemonName1 = data[random_pokemon]?.Name
+        let pokemonName2 = data[random_pokemon]?.Name
+        let pokemonType1 = data[random_pokemon]?.Type1
+        let pokemonType2 = data[random_pokemon]?.Type2
+        let pokemonAttack = data[random_pokemon]?.Attack
+           console.log(pokemonId)
+          console.log(pokemonName1);
+          console.log(pokemonName2)
+          console.log(pokemonAttack)
+          console.log(pokemonType1)
+          console.log(pokemonType2)
+
+      })
+      .catch(error => console.error('Error fetching or parsing data:', error));
+}
+
 const attacks = [
   { name: 'Tackle', power: 40 },
   { name: 'Thunderbolt', power: 90 },
@@ -599,3 +628,4 @@ window.addEventListener('keydown', function(e) {
   }
 });
 
+window.onload = fetchPokemonData;
