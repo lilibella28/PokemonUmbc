@@ -553,14 +553,6 @@ window.addEventListener('keyup', (e) => {
   }
 })
 
-
-addEventListener('click', () => {
-  if(!clicked){
-    audio.Map.play()
-    clicked = true
-  }
-})
-
 document.getElementById('npc').addEventListener('click', function () {
   document.getElementById('dialog-box').style.display = 'block';
 });
