@@ -144,21 +144,14 @@ function fetchPokemonData() {
         // Only for testing purpose delete it. 
         random_pokemon = Math.floor(Math.random() * data.length) + 1;
         let pokemonId = data[random_pokemon]?.ID
-        let pokemonName1 = data[random_pokemon]?.Name
-        let pokemonName2 = data[random_pokemon]?.Name
-        let pokemonType1 = data[random_pokemon]?.Type1
-        let pokemonType2 = data[random_pokemon]?.Type2
-        let pokemonAttack = data[random_pokemon]?.Attack
-           console.log(pokemonId)
-          console.log(pokemonName1);
-          console.log(pokemonName2)
-          console.log(pokemonAttack)
-          console.log(pokemonType1)
-          console.log(pokemonType2)
+        console.log(pokemonId)
+  
 
       })
       .catch(error => console.error('Error fetching or parsing data:', error));
 }
+
+
 
 const attacks = [
   { name: 'Tackle', power: 40 },
@@ -168,17 +161,44 @@ const attacks = [
 ];
 
 const items = [
-  { name: 'Potion', quantity: 5 },
-  { name: 'Super Potion', quantity: 3 },
-  { name: 'Revive', quantity: 2 }
+  { name: 'pokebal', quantity: 1 },
+  { name: 'greatball', quantity: 1.5 },
+  { name: 'ultraball', quantity: 2 },
+  { name: 'quickball', quantity: 1 },
+  { name: 'netball', quantity: 2 },
+  { name: 'fastball', quantity: 1 }
 ];
 
-const pokemonTeam = [
-  { name: 'Pikachu', level: 25 },
-  { name: 'Charizard', level: 36 },
-  { name: 'Blastoise', level: 34 },
-  { name: 'Venusaur', level: 32 }
-];
+
+let pokemonTeam = [];
+
+function fetchUsersTeams() {
+  fetch('http://localhost/PokemonUmbc/public/images/userTeams_database.php')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json(); 
+      })
+      .then(data => {
+        pokemonTeam = data.map(pokemon => ({
+          name: pokemon.Name,
+          level: pokemon.Level
+        }));
+        random_pokemon = Math.floor(Math.random() * data.length) + 1;
+        let pokemonId = data[random_pokemon]?.ID
+        let datas = fetchPokemonData()
+        console.log(datas)
+          alert(pokemonId)
+          alert(datas)
+      
+
+      })
+      .catch(error => console.error('Error fetching or parsing data:', error));
+}
+
+
+
 
 // Try to create a function to get the pokemon name from the database and call the funciton below to get the name to show
 const pokemonName1 = "Charmander"; 
@@ -211,7 +231,6 @@ function showAttackOptions() {
     button.textContent = `${attack.name} - Power: ${attack.power}`;
     button.onclick = () => {
       // Implement the attack action here
-      capture()
       
       console.log(`Used ${attack.name}`);
     };
@@ -223,44 +242,6 @@ function showAttackOptions() {
 const userId = 1;
 let wildPokemonID = Math.floor(Math.random() * 500) + 1; // Example wild Pokémon ID, dynamically set this based on encounter
 let level = Math.floor(Math.random() * 100) + 1; // Example level, dynamically set this as needed
-
-        // document.getElementById('attack-btn').addEventListener('click', attack);
-        // document.getElementById('capture-btn').addEventListener('click', capture);
-
-        // Fetch wild Pokémon data from the server
-        // fetchWildPokemonData(wildPokemonID);
-
-        function fetchWildPokemonData(ID) {
-            fetch('http://localhost/PokemonUmbc/capture/capture.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    action: 'getWildData',
-                    ID: ID
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                displayWildPokemon(data);
-            });
-        }
-
-        function displayWildPokemon(data) {
-            const wildPokemonDiv = document.getElementById('battle-interfaces');
-            wildPokemonDiv.innerHTML = `
-                <p>Name: ${data.Name}</p>
-                <p>HP: ${data.HP}</p>
-                <p>Attack: ${data.Attack}</p>
-                <p>Defense: ${data.Defense}</p>
-                <p>Speed: ${data.Speed}</p>
-                <p>Type1: ${data.Type1}</p>
-                <p>Type2: ${data.Type2}</p>
-            `;
-        }
-
-        
 
         function capture() {
             fetch('http://localhost/PokemonUmbc/capture/capture.php', {
@@ -279,6 +260,7 @@ let level = Math.floor(Math.random() * 100) + 1; // Example level, dynamically s
             .then(message => {
              wildPokemonID = Math.floor(Math.random() * 500) + 1; //adding random pokemon 
              level = Math.floor(Math.random() * 100) + 1; //adding pokemon
+              fetchUsersTeams()
                 alert(message);
             });}
 
@@ -299,6 +281,7 @@ function showBagItems() {
     button.textContent = `${item.name} - Quantity: ${item.quantity}`;
     button.onclick = () => {
       // Implement the item usage action here
+      capture()
       console.log(`Used ${item.name}`);
     };
     itemList.appendChild(button);
