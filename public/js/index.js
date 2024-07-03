@@ -317,6 +317,8 @@ function escapeBattle() {
     opacity: 1,
     onComplete: () => {
       cancelAnimationFrame(battleAnimationId)
+      audio.Battle.stop()
+      audio.Map.play()
       animate()
       document.querySelector('#userInterface').style.display = 'none'
       gsap.to('#overlap', {
@@ -348,6 +350,7 @@ function rectOverlap({rect1, rect2}){
     )
 }
 
+let clicked = false
 let move = true
 player.moves = false
 const battle = {initiated: false}
@@ -395,6 +398,8 @@ if(battle.initiated) return
           console.log('activate battle')
           //deactivate current animation loop
           window.cancelAnimationFrame(animationId)
+          audio.Map.stop()
+          audio.Battle.play()
           battleZone.initiated = true
           gsap.to('#overlap', {
             opacity: 1,
@@ -669,10 +674,54 @@ window.addEventListener('load', function() {
 });
 
 window.addEventListener('keydown', function(e) {
-  if (e.key.toLowerCase() === 'h') {
+  if (e.key.toLowerCase() === 's') {
       document.getElementById('dialog-box').style.display = 'block';
       document.getElementById('dialog-text').innerText = dialogText[dialogIndex];
   }
 });
 
-window.onload = fetchPokemonData;
+document.getElementById('help-icon').addEventListener('click', function () {
+  document.getElementById('help-dialog-box').style.display = 'block';
+  document.getElementById('help-dialog-text').innerText = helpDialogText[helpDialogIndex];
+});
+
+let helpDialogIndex = 0;
+const helpDialogText = [
+  "To move around, use the arrow keys.",
+  "Explore the forest to find Pokémon. (HINT: Go to the extreme right, to the grass.)",
+  "Visit the Sacred Grove to find the mythical Pokémon, Lumina.",
+  "Train your Pokémon and prepare for battles to protect Eldoria."
+];
+
+function nextHelp() {
+  helpDialogIndex++;
+  if (helpDialogIndex < helpDialogText.length) {
+      document.getElementById('help-dialog-text').innerText = helpDialogText[helpDialogIndex];
+  } else {
+      closeHelpDialog();
+  }
+}
+
+function closeHelpDialog() {
+  document.getElementById('help-dialog-box').style.display = 'none';
+  helpDialogIndex = 0;
+}
+
+window.addEventListener('load', function() {
+  document.getElementById('dialog-box').style.display = 'block';
+  document.getElementById('dialog-text').innerText = dialogText[dialogIndex];
+});
+
+window.addEventListener('keydown', function(e) {
+  if (e.key.toLowerCase() === 'h') {
+      document.getElementById('help-dialog-box').style.display = 'block';
+      document.getElementById('help-dialog-text').innerText = helpDialogText[helpDialogIndex];
+  }
+});
+
+gsap.to('#help-icon', {
+  opacity: 0.5,
+  yoyo: true,
+  repeat: -1,
+  duration: 0.5
+});
