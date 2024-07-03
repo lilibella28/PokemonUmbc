@@ -89,6 +89,13 @@
             <button onclick="closeDialog()">Close</button>
         </div>
 
+        <div id="help-icon" style="position: absolute; top: 10px; right: 10px; width: 50px; height: 50px; background: url('../images/help.png') no-repeat; background-size: contain; cursor: pointer; border: 2px solid yellow;"></div>
+        <div id="help-dialog-box" style="display: none; position: absolute; top: 70px; right: 10px; width: 300px; padding: 10px; background-color: white; border: 2px solid black; z-index: 20;">
+            <p id="help-dialog-text">Need help? Here are some hints and instructions...</p>
+            <button onclick="nextHelp()">Next</button>
+            <button onclick="closeHelpDialog()">Close</button>
+        </div>
+
         <div id="userInterface" style="display: none;">
             <div style="background-color: white; width: 300px; height: 100px; position: absolute; 
                         top: 10px; right: 50px; border: 5px black solid; padding: 5px;">
