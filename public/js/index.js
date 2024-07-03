@@ -178,15 +178,15 @@ function checkType(type, pokemon) {
 function calcCatchRate(currHP, maxHP, ball, wildMonData, turn) {
   if (ball.name === "quickball" && turn === 1) {
     console.log("quick draw confirmed");
-    ball.rateModifier = 4;
+    ball.quantity = 4;
   } else if (ball.name === "netball" && (checkType("Water", wildMonData) || checkType("Bug", wildMonData))) {
     console.log("net confirmed");
-    ball.rateModifier = 3.5;
+    ball.quantity = 3.5;
   } else if (ball.name === "fastball" && parseInt(wildMonData.getAttribute('monSpeed')) >= 100) {
     console.log("fast confirmed");
-    ball.rateModifier = 4;
+    ball.quantity = 4;
   }
-  let numerator = 1 + ((maxHP * 3) - (currHP * 2)) * ball.rateModifier;
+  let numerator = 1 + ((maxHP * 3) - (currHP * 2)) * ball.quantity;
   let denominator = maxHP * 3;
   return numerator / denominator;
 }
@@ -195,7 +195,6 @@ function catchMon(ball, pokemon, turn, currHP, maxHP, level) {
   let isCaught = false;
   let catchRate = calcCatchRate(currHP, maxHP, ball, pokemon, turn);
   let capture = Math.random();
-  let result = "";
   if (capture < catchRate) {
      alert("We caught him!!!");
     isCaught = true;
@@ -234,11 +233,11 @@ function getBallInfo(ballName) {
 }
 
 function handleBagItemClick(item) {
-  const wildPokemon = { getAttribute: () => "Water" }; // Replace with actual Pokémon data
-  const currHP = 50; // Replace with actual current HP
-  const maxHP = 100; // Replace with actual max HP
-  const level = 10; // Replace with actual level
-  const turn = 1; // Replace with actual turn count
+  const wildPokemon = { getAttribute: () => "Water" }; 
+  const currHP = 50;
+  const maxHP = 100; 
+  const level = 10; 
+  const turn = 1; 
 
   let ball = getBallInfo(item.name);
   if (!ball) {
@@ -248,7 +247,6 @@ function handleBagItemClick(item) {
   ball.rateModifier = item.quantity; // Use the quantity as the rateModifier
   let isCaught = catchMon(ball, wildPokemon, turn, currHP, maxHP, level);
   if (isCaught) {
-    alert('Captured!');
     capture() 
   } else {
     alert('Failed to capture!');
@@ -319,8 +317,8 @@ function showAttackOptions() {
 
 
 let userId = 1
-let wildPokemonID = Math.floor(Math.random() * 500) + 1; // Example wild Pokémon ID, dynamically set this based on encounter
-let level = Math.floor(Math.random() * 100) + 1; // Example level, dynamically set this as needed
+let wildPokemonID = Math.floor(Math.random() * 500) + 1; 
+let level = Math.floor(Math.random() * 100) + 1; 
 
         function capture() {
             fetch('http://localhost/PokemonUmbc/capture/capture.php', {
@@ -337,10 +335,10 @@ let level = Math.floor(Math.random() * 100) + 1; // Example level, dynamically s
             })
             .then(response => response.text())
             .then(message => {
-             wildPokemonID = Math.floor(Math.random() * 500) + 1; //adding random pokemon 
-             level = Math.floor(Math.random() * 100) + 1; //adding pokemon
+             wildPokemonID = Math.floor(Math.random() * 500) + 1; 
+             level = Math.floor(Math.random() * 100) + 1; 
               fetchUsersTeams()
-    
+              alert(message)
             });}
 
 // Function to show bag items
