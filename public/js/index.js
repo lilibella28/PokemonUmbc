@@ -880,8 +880,8 @@ const dialogText = [
   "Legend has it that deep within the forest lies the Sacred Grove, where the mythical Pokémon, Lumina, is said to reside.",
   "Lumina holds the power to control the elements and bring balance to our world. However, a dark force has emerged from the depths of the ocean, threatening to disrupt this harmony.",
   "To protect Eldoria, you must journey through the forest, challenging the Pokémon guardians that dwell within.",
-  "But beware, for the final battle awaits you on the shores of the Enchanted Ocean.",
-  "There, you will face the malevolent Sea Serpent, Tempestus, whose fury can summon raging storms and monstrous waves.",
+  "But beware, for the final battle awaits you in the heart of the Enchanted Forest.",
+  "There, you will face a secretive creature, shrouded in mystery, whose fury can summon raging storms and monstrous forces.",
   "Gather your courage, train your Pokémon, and uncover the secrets of Eldoria.",
   "Only then can you restore peace to our land and earn the right to meet Lumina.",
   "Your adventure begins now!"
