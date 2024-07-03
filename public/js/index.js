@@ -1,3 +1,5 @@
+
+
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 canvas.width = 1430
@@ -43,6 +45,8 @@ grassEncounterMap.forEach((row, i) => {
   })
 })
 
+let pokemonName1 = ""; 
+let pokemonName2 = ""; 
 const image = new Image()
 image.src = '../images/journey.png'
 
@@ -108,7 +112,7 @@ const keys = {
 
 //These are just test sprites, you are going to have to modify this to get the pokemon images somehow
 const monImage = new Image()
-monImage.src = '../../proj3_images/1st_generation/004Charmander.png'
+monImage.src = "../../proj3_images/1st_generation/Primeape.png"
 
 
 const pokemon1 = new Sprite({
@@ -120,7 +124,7 @@ const pokemon1 = new Sprite({
 })
 
 const mon2Image = new Image()
-mon2Image.src = '../../proj3_images/1st_generation/025Pikachu.png'
+mon2Image.src = '../../proj3_images/1st_generation/Pikachu.png'
 
 const pokemon2 = new Sprite({
   position: {
@@ -166,9 +170,14 @@ function fetchPokemonData() {
       })
       .then(data => {
         // Only for testing purpose delete it. 
-        random_pokemon = Math.floor(Math.random() * data.length) + 1;
-        let pokemonId = data[random_pokemon]?.ID
-  
+        randomPokemonOne = Math.floor(Math.random() * data.length) + 1;
+        randomPokemonTwo = Math.floor(Math.random() * data.length) + 1;
+        let pokemon1NameData = data[randomPokemonOne ]?.Name
+        let pokemon2NameData = data[randomPokemonTwo]?.Name
+        pokemonName1 = pokemon1NameData
+        pokemonName2 = pokemon2NameData
+        monImage.src = `../../proj3_images/1st_generation/${pokemonName1}.png`
+        mon2Image.src = `../../proj3_images/1st_generation/${pokemonName2}.png`
 
       })
       .catch(error => console.error('Error fetching or parsing data:', error));
@@ -367,8 +376,7 @@ function useSuperPotion() {
   }
 
 // Try to create a function to get the pokemon name from the database and call the funciton below to get the name to show
-const pokemonName1 = "Charmander"; 
-const pokemonName2 = "Pikachu"; 
+
 
 // Function to update Pokémon names dynamically
 function updatePokemonNames() {
@@ -965,3 +973,6 @@ gsap.to('#help-icon', {
   repeat: -1,
   duration: 0.5
 });
+
+
+fetchPokemonData()
