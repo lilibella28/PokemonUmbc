@@ -17,6 +17,11 @@ class Sprite {
     this.shaking = false;
     this.shakeDuration = 0;
     this.originalPosition = { ...position };
+
+    // Attack properties
+    this.attacking = false;
+    this.attackOffset = { x: 0, y: 0 };
+    this.attackDuration = 0;
   }
 
   draw(width = this.width, height = this.height) {
@@ -34,6 +39,15 @@ class Sprite {
         this.position = { ...this.originalPosition };
       }
     }
+
+    if (this.attacking) {
+      this.attackDuration--;
+      if (this.attackDuration <= 0) {
+        this.attacking = false;
+        this.attackOffset = { x: 250, y: 250 };
+      }
+    }
+
 
     if (this.flipped) {
       // Flip the image horizontally
@@ -96,7 +110,19 @@ class Sprite {
     this.shaking = true;
     this.shakeDuration = duration;
   }
+  attack(target, offsetX, duration) {
+    this.attacking = true;
+    this.attackOffset = { x: offsetX, y: 0 };
+    this.attackDuration = duration;
+
+    // Simulate an attack on the target
+    setTimeout(() => {
+      target.shake(20); // Target shakes as a reaction
+    }, duration * 50); // Adjust timing based on animation speed
+  }
 }
+
+
 
 class Boundary {
   static width = 64;

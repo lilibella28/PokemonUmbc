@@ -146,6 +146,15 @@ function shakeImages() {
   pokemon2.shake(20); // Shake for 20 frames
 }
 
+function battleSequence() {
+  // Example sequence: Pokemon1 attacks Pokemon2, then Pokemon2 attacks Pokemon1
+  pokemon1.attack(pokemon2, -50, 10); // Pokemon1 attacks Pokemon2
+
+  setTimeout(() => {
+    pokemon2.attack(pokemon1, 50, 10); // Pokemon2 attacks Pokemon1 after a delay
+  }, 1000); // Adjust delay for a better sequence timing
+}
+
 
 function fetchPokemonData() {
   fetch('http://localhost/PokemonUmbc/public/images/pokemon_assest.php')
@@ -159,7 +168,6 @@ function fetchPokemonData() {
         // Only for testing purpose delete it. 
         random_pokemon = Math.floor(Math.random() * data.length) + 1;
         let pokemonId = data[random_pokemon]?.ID
-        console.log(pokemonId)
   
 
       })
@@ -201,13 +209,13 @@ function checkType(type, pokemon) {
 
 function calcCatchRate(currHP, maxHP, ball, wildMonData, turn) {
   if (ball.name === "quickball" && turn === 1) {
-    console.log("quick draw confirmed");
+       alert("quick draw confirmed");
     ball.quantity = 4;
   } else if (ball.name === "netball" && (checkType("Water", wildMonData) || checkType("Bug", wildMonData))) {
-    console.log("net confirmed");
+    alert("net confirmed");
     ball.quantity = 3.5;
   } else if (ball.name === "fastball" && parseInt(wildMonData.getAttribute('monSpeed')) >= 100) {
-    console.log("fast confirmed");
+    alert("fast confirmed");
     ball.quantity = 4;
   }
   let numerator = 1 + ((maxHP * 3) - (currHP * 2)) * ball.quantity;
@@ -344,7 +352,7 @@ function useSuperPotion() {
           button.className = 'battle-button';
           button.textContent = `${item.name} - Quantity: ${item.quantity}`;
           button.onclick = () => {
-            
+              shakeImages() 
               if (item.name === 'Potion') {
                   usePotion();
               } else if (item.name === 'Super Potion') {
@@ -394,6 +402,7 @@ function playerAttack(attack) {
   else{
     setTimeout(aiAttack, 1000); // AI attacks after 1 second
   }
+  battleSequence()
 }
 
 // Function to handle AI attack (dummy function for demonstration)
@@ -452,7 +461,7 @@ function showAttackOptions() {
     button.textContent = `${attack.name} - Power: ${attack.power}`;
     button.onclick = () => {
       playerAttack(attack);
-      shakeImages()
+  
     };
     attackList.appendChild(button);
   });
@@ -593,7 +602,6 @@ function animate(){
     })
   )
     {
-      console.log('colliding')
     }
   
 
@@ -737,7 +745,6 @@ if(battle.initiated) return
       })
     )
       {
-        console.log('colliding')
         move = false
         break
       }
