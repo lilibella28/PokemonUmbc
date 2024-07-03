@@ -169,6 +169,92 @@ const items = [
   { name: 'fastball', quantity: 1 }
 ];
 
+const myUserID = Math.random() * 1000;
+
+function checkType(type, pokemon) {
+  return pokemon.getAttribute('monType1') === type || pokemon.getAttribute('monType2') === type;
+}
+
+function calcCatchRate(currHP, maxHP, ball, wildMonData, turn) {
+  if (ball.name === "quickball" && turn === 1) {
+    console.log("quick draw confirmed");
+    ball.rateModifier = 4;
+  } else if (ball.name === "netball" && (checkType("Water", wildMonData) || checkType("Bug", wildMonData))) {
+    console.log("net confirmed");
+    ball.rateModifier = 3.5;
+  } else if (ball.name === "fastball" && parseInt(wildMonData.getAttribute('monSpeed')) >= 100) {
+    console.log("fast confirmed");
+    ball.rateModifier = 4;
+  }
+  let numerator = 1 + ((maxHP * 3) - (currHP * 2)) * ball.rateModifier;
+  let denominator = maxHP * 3;
+  return numerator / denominator;
+}
+
+function catchMon(ball, pokemon, turn, currHP, maxHP, level) {
+  let isCaught = false;
+  let catchRate = calcCatchRate(currHP, maxHP, ball, pokemon, turn);
+  let capture = Math.random();
+  let result = "";
+  if (capture < catchRate) {
+     alert("We caught him!!!");
+    isCaught = true;
+    addToUser(pokemon, level);
+  } else if (capture < catchRate * 0.2) {
+    alert("Aww so close");
+    isCaught = false;
+  } else {
+    alert("The pokemon broke free!!!");
+    isCaught = false;
+  }
+  return isCaught;
+}
+
+async function addToUser(pokemon, level) {
+  const monID = pokemon.value;
+  const userId = myUserID;
+  const response = await fetch('http://localhost/PokemonUmbc/capture/capture.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: new URLSearchParams({
+      action: 'addToParty',
+      ID: monID,
+      userId: userId,
+      level: level
+    })
+  });
+  const result = await response.text();
+  // alert( result);
+}
+
+function getBallInfo(ballName) {
+  return items.find(item => item.name === ballName);
+}
+
+function handleBagItemClick(item) {
+  const wildPokemon = { getAttribute: () => "Water" }; // Replace with actual Pokémon data
+  const currHP = 50; // Replace with actual current HP
+  const maxHP = 100; // Replace with actual max HP
+  const level = 10; // Replace with actual level
+  const turn = 1; // Replace with actual turn count
+
+  let ball = getBallInfo(item.name);
+  if (!ball) {
+    console.error('Invalid ball name:', item.name);
+    return;
+  }
+  ball.rateModifier = item.quantity; // Use the quantity as the rateModifier
+  let isCaught = catchMon(ball, wildPokemon, turn, currHP, maxHP, level);
+  if (isCaught) {
+    alert('Captured!');
+    capture() 
+  } else {
+    alert('Failed to capture!');
+  }
+}
+
 
 let pokemonTeam = [];
 
@@ -186,10 +272,6 @@ function fetchUsersTeams() {
           level: pokemon.Level
         }));
         random_pokemon = Math.floor(Math.random() * data.length) + 1;
-        let pokemonId = data[random_pokemon]?.ID
-       
-      
-
       })
       .catch(error => console.error('Error fetching or parsing data:', error));
 }
@@ -236,7 +318,7 @@ function showAttackOptions() {
 }
 
 
-const userId = 1;
+let userId = 1
 let wildPokemonID = Math.floor(Math.random() * 500) + 1; // Example wild Pokémon ID, dynamically set this based on encounter
 let level = Math.floor(Math.random() * 100) + 1; // Example level, dynamically set this as needed
 
@@ -258,7 +340,7 @@ let level = Math.floor(Math.random() * 100) + 1; // Example level, dynamically s
              wildPokemonID = Math.floor(Math.random() * 500) + 1; //adding random pokemon 
              level = Math.floor(Math.random() * 100) + 1; //adding pokemon
               fetchUsersTeams()
-                alert(message);
+    
             });}
 
 // Function to show bag items
@@ -278,7 +360,8 @@ function showBagItems() {
     button.textContent = `${item.name} - Quantity: ${item.quantity}`;
     button.onclick = () => {
       // Implement the item usage action here
-      capture()
+      handleBagItemClick(item);
+  
       console.log(`Used ${item.name}`);
     };
     itemList.appendChild(button);
