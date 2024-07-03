@@ -187,10 +187,7 @@ function fetchUsersTeams() {
         }));
         random_pokemon = Math.floor(Math.random() * data.length) + 1;
         let pokemonId = data[random_pokemon]?.ID
-        let datas = fetchPokemonData()
-        console.log(datas)
-          alert(pokemonId)
-          alert(datas)
+       
       
 
       })
