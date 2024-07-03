@@ -11,9 +11,12 @@ class Sprite {
 
     this.moves = moves;
     this.flipped = false; // Flag to track if the sprite is flipped
+    this.visible = true;
   }
 
   draw(width = this.width, height = this.height) {
+    if(!this.visible) return;
+    
     if (this.flipped) {
       // Flip the image horizontally
       ctx.save();
@@ -83,7 +86,7 @@ class Boundary {
   }
 
   draw() {
-    ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+    ctx.fillStyle = 'rgba(255, 0, 0, 0)';
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
 }

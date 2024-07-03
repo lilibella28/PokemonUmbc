@@ -1,6 +1,5 @@
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
-console.log(gsap);
 canvas.width = 1430
 canvas.height = 860
 
@@ -154,10 +153,17 @@ function fetchPokemonData() {
 
 
 const attacks = [
-  { name: 'Tackle', power: 40 },
-  { name: 'Thunderbolt', power: 90 },
-  { name: 'Fire Blast', power: 110 },
-  { name: 'Water Gun', power: 50 }
+  { name: 'Tackle', power: 20 },
+  { name: 'Thundershock', power: 25 },
+  { name: 'Electro ball', power: 35 },
+  { name: 'Scratch', power: 15 }
+];
+
+const charAttacks = [
+  { name: 'Scratch', power: 15 },
+  { name: 'Ember', power: 20 },
+  { name: 'Flamethrower', power: 40 },
+  { name: 'Tackle', power: 20 }
 ];
 
 const items = [
@@ -291,6 +297,70 @@ function updatePokemonNames() {
  //call function to get it, 
 
 
+ const MAX_HEALTH = 100;
+let Health1 = 100;
+let Health2 = 100;
+
+function resetHealth() {
+  Health1 = 100;
+  Health2 = 100;
+  updateHealthBars(); // Update health bars after resetting values
+}
+
+// Function to handle player attack
+function playerAttack(attack) {
+  Health1 -= attack.power;
+  if (Health1 < 0) Health1 = 0;
+  updateHealthBars();
+  audio.Attack.play()
+  if(Health1 <= 0){
+    pokemonFaint();
+  }
+  else{
+    setTimeout(aiAttack, 1000); // AI attacks after 1 second
+  }
+  
+}
+
+// Function to handle AI attack (dummy function for demonstration)
+function aiAttack() {
+  const randomIndex = Math.floor(Math.random() * attacks.length);
+  const attack = attacks[randomIndex];
+  Health2 -= attack.power;
+  if (Health2 < 0) Health2 = 0;
+  updateHealthBars();
+  audio.Attack.play()
+  if(Health2 <= 0){
+    pokemonFaint();
+  }
+}
+
+function pokemonFaint(){
+  gsap.to('#overlap', {
+    opacity: 1,
+    onComplete: () => {
+      cancelAnimationFrame(battleAnimationId)
+      audio.Battle.stop()
+      audio.Map.play()
+      animate()
+      document.querySelector('#userInterface').style.display = 'none'
+      gsap.to('#overlap', {
+        opacity: 0
+      })
+    }
+  })
+}
+
+
+
+// Function to update health bars
+function updateHealthBars() {
+  const playerHealthBar = document.querySelector('#player-health-bar .health-bar-inner');
+  const aiHealthBar = document.querySelector('#pokemon-name-2').nextElementSibling.querySelector('.health-bar-inner');
+  playerHealthBar.style.width = `${Health1}%`;
+  aiHealthBar.style.width = `${Health2}%`;
+}
+
 // Function to show attack options
 function showAttackOptions() {
   document.getElementById('attack-options').classList.add('active');
@@ -307,9 +377,7 @@ function showAttackOptions() {
     button.className = 'battle-button';
     button.textContent = `${attack.name} - Power: ${attack.power}`;
     button.onclick = () => {
-      // Implement the attack action here
-      
-      console.log(`Used ${attack.name}`);
+      playerAttack(attack);
     };
     attackList.appendChild(button);
   });
@@ -364,6 +432,7 @@ function showBagItems() {
     };
     itemList.appendChild(button);
   });
+  updateItemUI();
 }
 
 // Function to show team list
@@ -404,7 +473,6 @@ function escapeBattle() {
       })
     }
   })
-  console.log('Escaped from battle');
 }
 
 const moving = [background, ...boundaries, foreground, ...battleZones]
@@ -448,7 +516,8 @@ function animate(){
   )
     {
       console.log('colliding')
-    } 
+    }
+  
 
   })
   battleZones.forEach(battleZones => {
@@ -473,12 +542,12 @@ if(battle.initiated) return
         }) && Math.random() < 0.01
       )
         {
-          console.log('activate battle')
           //deactivate current animation loop
           window.cancelAnimationFrame(animationId)
           audio.Map.stop()
           audio.Battle.play()
           battleZone.initiated = true
+          resetHealth()
           gsap.to('#overlap', {
             opacity: 1,
             repeat: 3,
@@ -521,7 +590,6 @@ if(battle.initiated) return
       })
     )
       {
-        console.log('colliding')
         move = false
         break
       }
@@ -547,7 +615,6 @@ if(battle.initiated) return
       })
     )
       {
-        console.log('colliding')
         move = false
         break
       }
@@ -570,7 +637,6 @@ if(battle.initiated) return
       })
     )
       {
-        console.log('colliding')
         move = false
         break
       }
@@ -626,11 +692,10 @@ function animateBattle(){
   pokemon2.flip(true);
   pokemon2.draw(150, 150)
   updatePokemonNames();
-  console.log('animating battle')
+  updateHealthBars();
 }
 
 //animateBattle();
-
 
 let prevKey = ''
 window.addEventListener('keydown', (e) => {
