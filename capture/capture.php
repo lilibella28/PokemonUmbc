@@ -88,6 +88,7 @@ try {
             $stmt->bindParam(':specialDefense', $wildData['SpDef']);
             $stmt->bindParam(':speed', $wildData['Speed']);
             $stmt->execute();
+
             return "Pokémon added successfully!";
         } else {
             return "User's party is full!";
@@ -114,6 +115,7 @@ try {
             $message = addToParty($conn, $userId, $ID, $level);
             echo $message;
         }
+
         exit;
     }
 
