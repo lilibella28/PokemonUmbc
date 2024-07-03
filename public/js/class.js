@@ -12,11 +12,29 @@ class Sprite {
     this.moves = moves;
     this.flipped = false; // Flag to track if the sprite is flipped
     this.visible = true;
+
+    // Shake properties
+    this.shaking = false;
+    this.shakeDuration = 0;
+    this.originalPosition = { ...position };
   }
 
   draw(width = this.width, height = this.height) {
-    if(!this.visible) return;
-    
+    if (!this.visible) return;
+
+    let xOffset = 0;
+    let yOffset = 0;
+
+    if (this.shaking) {
+      xOffset = Math.random() * 10 - 5;
+      yOffset = Math.random() * 10 - 5;
+      this.shakeDuration--;
+      if (this.shakeDuration <= 0) {
+        this.shaking = false;
+        this.position = { ...this.originalPosition };
+      }
+    }
+
     if (this.flipped) {
       // Flip the image horizontally
       ctx.save();
@@ -27,8 +45,8 @@ class Sprite {
         this.currentSprite * this.height,
         this.image.width / this.frames.max,
         this.image.height / this.frames.max,
-        -this.position.x - width, // Adjust x position when flipped
-        this.position.y,
+        -(this.position.x + xOffset) - width, // Adjust x position when flipped
+        this.position.y + yOffset,
         width,
         height
       );
@@ -41,8 +59,8 @@ class Sprite {
         this.currentSprite * this.height,
         this.image.width / this.frames.max,
         this.image.height / this.frames.max,
-        this.position.x,
-        this.position.y,
+        this.position.x + xOffset,
+        this.position.y + yOffset,
         width,
         height
       );
@@ -72,7 +90,11 @@ class Sprite {
     } else {
       this.flipped = !this.flipped; // Toggle flip state if no parameter is provided
     }
-    console.log('Sprite flipped:', this.flipped);
+  }
+
+  shake(duration) {
+    this.shaking = true;
+    this.shakeDuration = duration;
   }
 }
 

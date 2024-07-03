@@ -109,6 +109,8 @@ const keys = {
 //These are just test sprites, you are going to have to modify this to get the pokemon images somehow
 const monImage = new Image()
 monImage.src = '../../proj3_images/1st_generation/004Charmander.png'
+
+
 const pokemon1 = new Sprite({
   position: {
     x: 1000, 
@@ -119,6 +121,7 @@ const pokemon1 = new Sprite({
 
 const mon2Image = new Image()
 mon2Image.src = '../../proj3_images/1st_generation/025Pikachu.png'
+
 const pokemon2 = new Sprite({
   position: {
     x: 400, 
@@ -130,6 +133,19 @@ const pokemon2 = new Sprite({
 // Dummy data for testing, need to change this with database calls and other stuff
 //Also note that you need to add functions to add functionalitites to the buttons
 //These are all presets that need to be replaced 
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  pokemon1.draw();
+  pokemon2.draw();
+  requestAnimationFrame(animate);
+}
+
+function shakeImages() {
+  pokemon1.shake(20); // Shake for 20 frames
+  pokemon2.shake(20); // Shake for 20 frames
+}
+
 
 function fetchPokemonData() {
   fetch('http://localhost/PokemonUmbc/public/images/pokemon_assest.php')
@@ -378,7 +394,6 @@ function playerAttack(attack) {
   else{
     setTimeout(aiAttack, 1000); // AI attacks after 1 second
   }
-  
 }
 
 // Function to handle AI attack (dummy function for demonstration)
@@ -437,6 +452,7 @@ function showAttackOptions() {
     button.textContent = `${attack.name} - Power: ${attack.power}`;
     button.onclick = () => {
       playerAttack(attack);
+      shakeImages()
     };
     attackList.appendChild(button);
   });
@@ -757,7 +773,12 @@ function animateBattle(){
   updateHealthBars();
 }
 
-//animateBattle();
+// Maybe animation
+
+
+ 
+
+
 
 let prevKey = ''
 window.addEventListener('keydown', (e) => {
