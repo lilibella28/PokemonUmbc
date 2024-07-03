@@ -167,6 +167,8 @@ const charAttacks = [
 ];
 
 const items = [
+  { name: 'Potion', quantity: 5 },
+  { name: 'Super Potion', quantity: 3 },
   { name: 'pokebal', quantity: 1 },
   { name: 'greatball', quantity: 1.5 },
   { name: 'ultraball', quantity: 2 },
@@ -282,6 +284,63 @@ function fetchUsersTeams() {
 
 
 
+function usePotion() {
+    if (items[0].quantity > 0) {
+      if (Health2 < MAX_HEALTH) {
+        Health2 += 20; // Potion restores 20 health
+        if (Health2 > MAX_HEALTH) {
+         Health2 = MAX_HEALTH;
+        }
+       items[0].quantity--; // Decrease Potion count
+       updateHealthBars();
+        audio.Heal.play();
+        updateItemUI();
+        setTimeout(aiAttack, 1000); // Call AI attack after using Potion
+     }
+   }
+  }
+  
+
+  // Function to use Super Potion
+function useSuperPotion() {
+    if (items[1].quantity > 0) {
+      if (Health2 < MAX_HEALTH) {
+        Health2 += 50; // Super Potion restores 50 health
+       if (Health2 > MAX_HEALTH) {
+         Health2 = MAX_HEALTH;
+        }
+        items[1].quantity--; // Decrease Super Potion count
+       updateHealthBars();
+        audio.Heal.play();
+        updateItemUI();
+        setTimeout(aiAttack, 1000); // Call AI attack after using Super Potion
+      }
+    }
+  }
+
+
+  function updateItemUI() {
+      const itemList = document.getElementById('item-list');
+      itemList.innerHTML = '';
+    
+      items.forEach(item => {
+          const button = document.createElement('button');
+          button.className = 'battle-button';
+          button.textContent = `${item.name} - Quantity: ${item.quantity}`;
+          button.onclick = () => {
+            
+              if (item.name === 'Potion') {
+                  usePotion();
+              } else if (item.name === 'Super Potion') {
+                  useSuperPotion();
+              }
+              else{
+                handleBagItemClick(item)
+              }
+          };
+          itemList.appendChild(button);
+      });
+  }
 
 // Try to create a function to get the pokemon name from the database and call the funciton below to get the name to show
 const pokemonName1 = "Charmander"; 
@@ -420,27 +479,30 @@ function showBagItems() {
   itemList.innerHTML = '';
 
   // Populate item list
-  items.forEach(item => {
-    const button = document.createElement('button');
-    button.className = 'battle-button';
-    button.textContent = `${item.name} - Quantity: ${item.quantity}`;
-    button.onclick = () => {
-      // Implement the item usage action here
-      handleBagItemClick(item);
+  // items.forEach(item => {
+  //   const button = document.createElement('button');
+  //   button.className = 'battle-button';
+  //   button.textContent = `${item.name} - Quantity: ${item.quantity}`;
+  //   button.onclick = () => {
+  //     // Implement the item usage action here
+  //     handleBagItemClick(item);
   
-      console.log(`Used ${item.name}`);
-    };
-    itemList.appendChild(button);
-  });
+  //     console.log(`Used ${item.name}`);
+  //   };
+  //   itemList.appendChild(button);
+  // });
   updateItemUI();
 }
+
+
+
 
 // Function to show team list
 function showTeamList() {
   document.getElementById('attack-options').classList.remove('active');
   document.getElementById('bag-items').classList.remove('active');
   document.getElementById('team-pokemon').classList.add('active');
-
+  updateItemUI()
   // Clear previous list
   const pokemonList = document.getElementById('pokemon-list');
   pokemonList.innerHTML = '';
@@ -769,6 +831,13 @@ window.addEventListener('keyup', (e) => {
       keys.ArrowRight.pressed = false
       player.moves = false
       break
+  }
+})
+
+addEventListener('click', () => {
+  if(!clicked){
+    audio.Map.play()
+    clicked = true
   }
 })
 
