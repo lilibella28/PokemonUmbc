@@ -253,7 +253,7 @@ function catchMon(ball, pokemon, turn, currHP, maxHP, level) {
 async function addToUser(pokemon, level) {
   const monID = pokemon.value;
   const userId = myUserID;
-  const response = await fetch('http://localhost/PokemonUmbc/capture/capture.php', {
+  const response = await fetch('http://localhost/PokemonUmbc/src/capture/capture.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
@@ -481,7 +481,7 @@ let wildPokemonID = Math.floor(Math.random() * 500) + 1;
 let level = Math.floor(Math.random() * 100) + 1; 
 
         function capture() {
-            fetch('http://localhost/PokemonUmbc/capture/capture.php', {
+            fetch('http://localhost/PokemonUmbc/src/capture/capture.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
