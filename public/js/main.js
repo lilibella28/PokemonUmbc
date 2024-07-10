@@ -4,6 +4,16 @@ import { collisions } from './collision.js';
 import { grassEncounter } from './grassEncounter.js';
 import { Boundary } from './Boundary.js'
 import { Sprite } from './Sprite.js'
+import{nextDialog, closeDialog,nextHelp, closeHelpDialog} from './dialog.js'
+
+const NextDialogId =document.getElementById('nextDialog')
+const CloseDialogId =document.getElementById('closeDialog')
+const NextHelpId =document.getElementById('nextHelp')
+const CloseHelpDialogId =document.getElementById('closeHelpDialog')
+NextDialogId.addEventListener('click', nextDialog)
+CloseDialogId.addEventListener('click', closeDialog)
+NextHelpId.addEventListener('click', nextHelp)
+CloseHelpDialogId.addEventListener('click', closeHelpDialog)
 
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
