@@ -3,7 +3,7 @@
 import { collisions } from './collision.js';
 import { grassEncounter } from './grassEncounter.js';
 import { Boundary } from './Boundary.js'
-import { Sprite } from './Sprite.js'
+import{image, foreImage, playerImage, player, background, foreground, battleBackgroundImage, battleBackground} from './SpriteImage.js'
 import{nextDialog, closeDialog,nextHelp, closeHelpDialog} from './dialog.js'
 
 const NextDialogId =document.getElementById('nextDialog')
@@ -59,47 +59,19 @@ grassEncounterMap.forEach((row, i) => {
     }))
   })
 })
-const image = new Image()
-image.src = '../images/journey.png'
 
-const foreImage = new Image()
-foreImage.src = '../images/foreground.png'
 
-const playerImage = new Image()
-playerImage.src = '../images/game_assets/graphics/characters/player.png'
 
-const player = new Sprite({
-  position: {
-    x: canvas.width / 2 - 512 / 4 / 2,
-    y: canvas.height / 2 - 350 / 2
-  }, 
-  image: playerImage,
+let battleAnimationId 
 
-  frames: {
-    max: 4
-  },
-  sprites: [0, 1, 2, 3]
-})
-
-const background = new Sprite({
-  position: { x: offset.x, 
-              y: offset.y
-},
-image: image
-})
-
-const foreground = new Sprite({
-  position: { x: offset.x, 
-              y: offset.y
-},
-image: foreImage
-})
-
-const battleBackgroundImage = new Image()
-battleBackgroundImage.src = '../images/game_assets/backgrounds/background1.png'
-const battleBackground = new Sprite({position: {
-  x: 0,
-  y: 0
-},
-image: battleBackgroundImage
-})
+function animateBattle(){
+  battleAnimationId = window.requestAnimationFrame(animateBattle)
+  battleBackground.draw(canvas.width, canvas.height)
+  document.querySelector('#userInterface').style.display = 'block'
+  pokemon1.draw(150, 150)
+  pokemon2.flip(true);
+  pokemon2.draw(150, 150)
+  updatePokemonNames();
+  updateHealthBars();
+}
+animateBattle()
