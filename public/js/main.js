@@ -1,19 +1,4 @@
-// import { setupCanvas } from './utils.js';
-// import {nextDialog, closeDialog, nextHelp, closeHelpDialog} from './dialog.js'
-// import { createMap } from './utils.js';
 
-
-// document.addEventListener('DOMContentLoaded', () => {
-//     setupCanvas();
-//     nextDialog();
-//     createMap();
-//     closeDialog();
-//     nextHelp();
-//     closeHelpDialog()
-   
-//   });
-  
-//   window.addEventListener('keydown', handlePlayerMovement);
 
 import { collisions } from './collision.js';
 import { grassEncounter } from './grassEncounter.js';
@@ -64,9 +49,6 @@ grassEncounterMap.forEach((row, i) => {
     }))
   })
 })
-
-let pokemonName1 = ""; 
-let pokemonName2 = ""; 
 const image = new Image()
 image.src = '../images/journey.png'
 
