@@ -4,8 +4,8 @@ import { Boundary } from './Boundary.js';
 import { createMap } from './utils.js';
 import { offset } from './config.js';
 
-export const collisionMap = createMap(collisions, 84);
-export const grassEncounterMap = createMap(grassEncounter, 84);
+export const collisionMap = []
+export const grassEncounterMap = []
 
 export const boundaries = [];
 collisionMap.forEach((row, i) => {

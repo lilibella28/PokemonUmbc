@@ -1,0 +1,86 @@
+#battle-interface {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    top: 0;
+    width: 400px; /* Adjust width as needed */
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex; /* Use flexbox for alignment */
+    flex-direction: column; /* Stack buttons vertically */
+    justify-content: space-between; /* Distribute items evenly */
+    gap: 20px; /* Adjust gap between buttons */
+    padding: 20px; /* Increased padding for better spacing */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-left: 5px black solid;
+}
+.battle-button {
+    padding: 15px 10px; /* Adjust padding for smaller buttons */
+    background-color: #333;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Full width for each button */
+    text-align: center; /* Center align text */
+    font-size: 12px; /* Adjust font size */
+}
+.battle-button:hover {
+    background-color: #555;
+}
+.left-panel {
+    position: absolute; /* Match the battle interface panel position */
+    bottom: 0;
+    left: 0;
+    top: 0;
+    width: 1030px; /* Adjust width as needed */
+    background-color: #222;
+    color: white;
+    padding: 10px;
+    box-sizing: border-box;
+    display: none; /* Initially hide left panel */
+    overflow-y: auto; /* Allow scrolling if content overflows */
+}
+.active {
+    display: block; /* Show when active */
+}
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Adjust gap between buttons */
+}
+.button-container button {
+    flex: 1 1 calc(50% - 10px); /* Two columns with gap */
+    padding: 10px;
+    font-size: 12px;
+    background-color: #444;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+.button-container button:hover {
+    background-color: #666;
+}
+.health-bar-inner {
+    height: 5px;
+    background-color: green;
+    width: 100%; /* Initially full width */
+}
+
+
+@keyframes shake {
+0% { transform: translateX(0); }
+25% { transform: translateX(-5px); }
+50% { transform: translateX(5px); }
+75% { transform: translateX(-5px); }
+100% { transform: translateX(0); }
+}
+
+.shake {
+animation: shake 0.5s;
+}
